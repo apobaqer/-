@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أخبار قرية القرية</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>أخبار قرية القرية</h1>
+        <a href="https://chat.whatsapp.com/BhS70XKPVHQKWc153IkpYg" target="_blank" class="whatsapp-link">قناة الواتساب</a>
+    </header>
+
+    <main>
+        <section id="posts">
+            <!-- المنشورات ستظهر هنا -->
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 أخبار قرية القرية</p>
+        <p>بتنفيذ الشاب: سجاد ماك عبدالرسول محمد أحمد صالح</p>
+        <p>للتواصل: <a href="tel:+97339238955">00973 39238955</a></p>
+    </footer>
+
+    <script>
+        fetch('https://raw.githubusercontent.com/USERNAME/REPO_NAME/main/posts.json')
+            .then(response => response.json())
+            .then(posts => {
+                const postsContainer = document.getElementById('posts');
+                posts.forEach(post => {
+                    const postDiv = document.createElement('div');
+                    postDiv.classList.add('post');
+                    postDiv.innerHTML = `
+                        <h2>${post.title}</h2>
+                        <p>${post.content}</p>
+                        ${post.media ? `<img src="${post.media}" alt="وسائط المنشور" style="max-width: 100%; max-height: 300px;">` : ""}
+                    `;
+                    postsContainer.appendChild(postDiv);
+                });
+            })
+            .catch(error => console.error('خطأ في تحميل الأخبار:', error));
+    </script>
+</body>
+</html>
