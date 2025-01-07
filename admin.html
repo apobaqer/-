@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <header>
+        <h1>لوحة التحكم</h1>
+        <a href="index.html" class="back-link">العودة للموقع</a>
+    </header>
+
+    <main>
+        <section class="admin-section">
+            <h2>إدارة المنشورات</h2>
+            <form id="postForm">
+                <label for="title">عنوان المنشور:</label>
+                <input type="text" id="title" name="title" placeholder="اكتب عنوان المنشور" required>
+                
+                <label for="content">محتوى المنشور:</label>
+                <textarea id="content" name="content" placeholder="اكتب محتوى المنشور هنا..." required></textarea>
+                
+                <label for="media">رفع صورة أو فيديو:</label>
+                <input type="file" id="media" name="media" accept="image/*,video/*">
+                
+                <button type="submit" class="add-button">إضافة المنشور</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("postForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const title = document.getElementById("title").value;
+            const content = document.getElementById("content").value;
+            const media = document.getElementById("media").files[0];
+            
+            let mediaURL = '';
+            if (media) {
+                mediaURL = URL.createObjectURL(media);
+            }
+            
+            const post = { title, content, media: mediaURL };
+            // استخدم GitHub API لرفع البيانات
+            const githubAPIURL = 'https://api.github.com/repos/USERNAME/REPO_NAME/contents/posts.json';
+            fetch(githubAPIURL, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'token YOUR_GITHUB_TOKEN',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'Add new post',
+                    content: btoa(JSON.stringify([post])) // تحويل البيانات إلى base64
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("تم إضافة المنشور بنجاح");
+                document.getElementById("postForm").reset();
+            })
+            .catch(error => console.log("Error adding post:", error));
+        });
+    </script>
+</body>
+</html>
